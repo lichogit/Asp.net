@@ -1,0 +1,112 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - CLOUD STRIDER</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #fafafa; }
+        .navbar { background-color: #ffffff; border-bottom: 1px solid #eaeaea; padding: 1.2rem 2rem; }
+        .navbar-brand { font-weight: 800; letter-spacing: 2px; color: #000 !important; }
+        .nav-link { color: #666 !important; font-weight: 500; text-transform: uppercase; font-size: 0.9rem; }
+        .nav-link:hover { color: #000 !important; }
+        .btn-dark { background-color: #111; border: none; border-radius: 0; padding: 0.75rem 1.5rem; text-transform: uppercase; font-weight: 600; letter-spacing: 1px; }
+        .card { border: none; border-radius: 0; box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: transform 0.3s ease; }
+        .card:hover { transform: translateY(-5px); }
+        .card-img-top { border-radius: 0; height: 250px; object-fit: cover; }
+        .footer { background-color: #111; color: #fff; padding: 3rem 0; text-align: center; margin-top: 5rem; }
+    </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
+   <header class="sticky-top bg-white shadow-sm">
+        <nav class="navbar navbar-expand-lg border-bottom-0"> 
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">CLOUD STRIDER</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Shop">Catalog</a></li>
+        <li class="nav-item"><a class="nav-link" asp-controller="Cart" asp-action="Index">Cart</a></li>
+    </ul>
+
+    <div class="d-flex align-items-center gap-4">
+        
+        <form class="d-flex mb-0" asp-controller="Home" asp-action="Shop" method="get">
+            <input class="form-control rounded-0 me-2" type="search" name="searchString" placeholder="Search sneakers..." value="@ViewData["CurrentFilter"]" style="min-width: 200px;">
+            <button class="btn btn-outline-dark rounded-0 fw-bold text-uppercase" type="submit">Search</button>
+        </form>
+
+        <div class="d-flex align-items-center gap-3">
+            @if (User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                <span class="text-muted small fw-bold text-uppercase text-nowrap">Hello, @User.Identity.Name!</span>
+                <form class="form-inline mb-0" asp-controller="Account" asp-action="Logout" method="post">
+                    <button type="submit" class="btn btn-link text-dark text-decoration-none fw-bold text-uppercase p-0 text-nowrap">Logout</button>
+                </form>
+            }
+            else
+            {
+                <a asp-controller="Account" asp-action="Login" class="text-dark text-decoration-none fw-bold text-uppercase small text-nowrap">Sign In</a>
+                <a asp-controller="Account" asp-action="Register" class="btn btn-dark rounded-0 fw-bold text-uppercase px-4 py-2 text-nowrap">Sign Up</a>
+            }
+        </div>
+
+    </div>
+</div>
+                   
+                </div>
+            </div>
+        </nav>
+    </header>
+    
+   <div class="container mt-5 flex-grow-1">
+        <main role="main" class="pb-3">
+            @if(TempData["SuccessMessage"] != null) {
+                <div class="alert alert-success rounded-0 border-0 shadow-sm">@TempData["SuccessMessage"]</div>
+            }
+            @RenderBody()
+<div class="toast-container position-fixed bottom-0 end-0 p-4" style="z-index: 1050;">
+        @if (TempData["ToastMessage"] != null)
+        {
+            <div id="cartToast" class="toast align-items-center text-white bg-dark border-0 shadow" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body fw-bold">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle-fill me-2 text-success" viewBox="0 0 16 16">
+                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                        </svg>
+                        @TempData["ToastMessage"]
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        }
+    </div>
+
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            &copy; 2026 - CLOUD STRIDER - Crafted with ASP.NET Core
+        </div>
+    </footer>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+    
+    <script>
+        window.onload = (event) => {
+            let myToast = document.getElementById('cartToast');
+            if (myToast) {
+                // Initialize and show the toast
+                let bsToast = new bootstrap.Toast(myToast, { autohide: true, delay: 3000 });
+                bsToast.show();
+            }
+        };
+    </script>
+</body>
+</html>
+

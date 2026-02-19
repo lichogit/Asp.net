@@ -1,0 +1,26 @@
+# Build results
+[Bb]in/
+[Oo]bj/
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# IDE folders
+.vscode/
+.vs/
+
+# Local databases 
+*.mdf
+*.ldf
+*.ndf
+*.db
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+appsettings.Development.json

@@ -1,0 +1,61 @@
+@model SneakerShop.Models.RegisterViewModel
+@{ ViewData["Title"] = "Create Account"; }
+
+<div class="row justify-content-center mt-5 mb-5">
+    <div class="col-md-6">
+        <div class="bg-white p-5 shadow-sm border">
+            <h2 class="fw-bolder text-uppercase text-center mb-4">Join Cloud Strider</h2>
+            
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger rounded-0 border-0 small mb-4">
+                    <div asp-validation-summary="All" class="text-danger mb-0"></div>
+                </div>
+            }
+            
+            <form method="post" asp-controller="Account" asp-action="Register">
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label small fw-bold text-muted text-uppercase">First Name</label>
+                        <input type="text" asp-for="FirstName" class="form-control rounded-0" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label small fw-bold text-muted text-uppercase">Last Name</label>
+                        <input type="text" asp-for="LastName" class="form-control rounded-0" required>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label small fw-bold text-muted text-uppercase">Email</label>
+                    <input type="email" asp-for="Email" class="form-control rounded-0" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label small fw-bold text-muted text-uppercase">Phone Number</label>
+                    <input type="tel" asp-for="PhoneNumber" class="form-control rounded-0" required>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label small fw-bold text-muted text-uppercase">Password</label>
+                    <input type="password" asp-for="Password" class="form-control rounded-0" required>
+                    <div class="form-text small">Must contain: 1 uppercase, 1 lowercase, 1 number, and 1 symbol (like ! or $).</div>
+                </div>
+
+                <button type="submit" class="btn btn-dark btn-lg w-100 rounded-0 fw-bold text-uppercase mb-3">Create Account</button>
+            </form>
+
+            <div class="d-flex align-items-center my-4">
+                <hr class="flex-grow-1">
+                <span class="mx-3 text-muted small text-uppercase fw-bold">Or sign up with</span>
+                <hr class="flex-grow-1">
+            </div>
+
+            <form asp-controller="Account" asp-action="ExternalLogin" method="post" class="d-flex gap-2">
+                <button type="submit" name="provider" value="Google" class="btn btn-outline-dark w-100 rounded-0 fw-bold">Google</button>
+                
+            </form>
+            
+            <p class="mt-4 mb-0 text-muted small text-center">Already have an account? <a asp-action="Login" class="text-dark fw-bold">Sign In</a></p>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,69 @@
+@model IEnumerable<SneakerShop.Models.Product>
+@{ ViewData["Title"] = "Catalog"; }
+
+<div class="d-flex justify-content-between align-items-center mb-4 mt-3">
+    <h2 class="fw-bold text-uppercase mb-0">The Collection</h2>
+    
+    <button class="btn btn-outline-dark rounded-0 fw-bold text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#filterCollapse" aria-expanded="false" aria-controls="filterCollapse">
+        Filters &plus;
+    </button>
+</div>
+
+<div class="collapse @(ViewData["MinPrice"] != null || ViewData["MaxPrice"] != null ? "show" : "") mb-5" id="filterCollapse">
+    <form asp-controller="Home" asp-action="Shop" method="get" class="bg-white p-4 shadow-sm border">
+        
+        <input type="hidden" name="searchString" value="@ViewData["CurrentFilter"]" />
+        
+        <div class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label text-uppercase small fw-bold text-muted">Min Price ($)</label>
+                <input type="number" name="minPrice" value="@ViewData["MinPrice"]" class="form-control rounded-0" step="1" min="0">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label text-uppercase small fw-bold text-muted">Max Price ($)</label>
+                <input type="number" name="maxPrice" value="@ViewData["MaxPrice"]" class="form-control rounded-0" step="1" min="0">
+            </div>
+            <div class="col-md-4 d-flex gap-2">
+                <button type="submit" class="btn btn-dark w-100 rounded-0 fw-bold text-uppercase">Apply Filters</button>
+                <a asp-action="Shop" asp-route-searchString="@ViewData["CurrentFilter"]" class="btn btn-outline-secondary w-100 rounded-0 fw-bold text-uppercase">Clear</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+@if (ViewData["CurrentFilter"] != null)
+{
+    <p class="text-muted small fw-bold text-uppercase mb-4">
+        Showing @Model.Count() results for "@ViewData["CurrentFilter"]"
+    </p>
+}
+else
+{
+    <p class="text-muted small fw-bold text-uppercase mb-4">Showing @Model.Count() results</p>
+}
+
+<div class="row row-cols-1 row-cols-md-3 g-5">
+    @foreach (var item in Model)
+    {
+        <div class="col">
+            <div class="card h-100 border-0 shadow-sm">
+                <img src="@item.ImageUrl" class="card-img-top" alt="@item.Name" style="border-radius: 0; height: 250px; object-fit: cover;">
+                <div class="card-body text-center p-4">
+                    <h5 class="card-title fw-bold">@item.Name</h5>
+                    <p class="card-text text-muted mb-4">@item.Description</p>
+                    <p class="card-text fw-bold fs-4 mb-4">$@item.Price.ToString("0.00")</p>
+                    <a asp-controller="Home" asp-action="Details" asp-route-id="@item.Id" class="btn btn-dark w-100 rounded-0 text-uppercase fw-bold">View Details</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@if (!Model.Any())
+{
+    <div class="text-center py-5">
+        <h4 class="text-muted">No sneakers found matching your criteria.</h4>
+        <p>Try adjusting your filters or search term.</p>
+        <a asp-action="Shop" class="btn btn-outline-dark rounded-0 mt-3">View All Sneakers</a>
+    </div>
+}
