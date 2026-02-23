@@ -24,7 +24,7 @@ namespace SneakerShop.Controllers
         [HttpGet]
         public IActionResult Register() => View(new RegisterViewModel());
 
-        // --- POST METHODS (Handles the form submissions) ---
+        // POST METHODS (Handles the form submissions) ---
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
@@ -84,7 +84,7 @@ namespace SneakerShop.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        // --- EXTERNAL LOGIN METHODS (Google / Facebook) ---
+        // EXTERNAL LOGIN METHODS (Google)
         [HttpPost]
         public IActionResult ExternalLogin(string provider, string returnUrl = null)
         {
