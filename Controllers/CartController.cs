@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SneakerShop.Data;
 using SneakerShop.Models;
@@ -42,7 +43,9 @@ namespace SneakerShop.Controllers
             return RedirectToAction("Details", "Home", new { id = id });
         }
 
-public IActionResult RemoveFromCart(int id, string size)
+[HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult RemoveFromCart(int id, string size)
         {
             var cart = HttpContext.Session.Get<List<CartItem>>("Cart") ?? new List<CartItem>();
             
@@ -62,6 +65,7 @@ public IActionResult RemoveFromCart(int id, string size)
             // Refresh the cart page
             return RedirectToAction("Index");
         }
+        [Authorize]
         public IActionResult Checkout()
         {
             var cart = HttpContext.Session.Get<List<CartItem>>("Cart") ?? new List<CartItem>();
@@ -71,6 +75,8 @@ public IActionResult RemoveFromCart(int id, string size)
         }
 
         [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
         public IActionResult ProcessCheckout()
         {
             

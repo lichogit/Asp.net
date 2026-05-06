@@ -35,10 +35,15 @@
                     <input type="tel" asp-for="PhoneNumber" class="form-control rounded-0" required>
                 </div>
 
-                <div class="mb-4">
+                <div class="mb-3">
                     <label class="form-label small fw-bold text-muted text-uppercase">Password</label>
                     <input type="password" asp-for="Password" class="form-control rounded-0" required>
                     <div class="form-text small">Must contain: 1 uppercase, 1 lowercase, 1 number, and 1 symbol (like ! or $).</div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label small fw-bold text-muted text-uppercase">Confirm Password</label>
+                    <input type="password" asp-for="ConfirmPassword" class="form-control rounded-0" required>
                 </div>
 
                 <button type="submit" class="btn btn-dark btn-lg w-100 rounded-0 fw-bold text-uppercase mb-3">Create Account</button>

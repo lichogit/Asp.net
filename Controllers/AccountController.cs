@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SneakerShop.Models;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace SneakerShop.Controllers
 {
@@ -26,6 +27,7 @@ namespace SneakerShop.Controllers
 
         // POST METHODS (Handles the form submissions)
         [HttpPost]
+        [EnableRateLimiting("auth")]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
@@ -57,11 +59,12 @@ namespace SneakerShop.Controllers
         }
 
         [HttpPost]
+        [EnableRateLimiting("auth")]
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
         {
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: false, lockoutOnFailure: false);
+                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: false, lockoutOnFailure: true);
                 
                 if (result.Succeeded)
                 {
@@ -86,6 +89,7 @@ namespace SneakerShop.Controllers
 
         // EXTERNAL LOGIN METHODS (Google)
         [HttpPost]
+        [EnableRateLimiting("auth")]
         public IActionResult ExternalLogin(string provider, string returnUrl = null)
         {
             var redirectUrl = Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl });
@@ -97,7 +101,7 @@ namespace SneakerShop.Controllers
         {
             if (remoteError != null) 
             {
-                ModelState.AddModelError(string.Empty, $"Error from external provider: {remoteError}");
+                ModelState.AddModelError(string.Empty, "An error occurred during external sign-in. Please try again.");
                 return View("Login");
             }
             

@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using SneakerShop.Data;
 using SneakerShop.Models;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,11 +34,6 @@ builder.Services.AddAuthentication()
         };
     });
 
-// Add services to the container
-builder.Services.AddControllersWithViews();
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
 // Configure Session
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
@@ -44,6 +41,21 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromMinutes(30);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    options.Cookie.SameSite = SameSiteMode.Strict;
+});
+
+// Configure Rate Limiting
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.AddFixedWindowLimiter("auth", opt =>
+    {
+        opt.PermitLimit = 10;
+        opt.Window = TimeSpan.FromMinutes(1);
+        opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        opt.QueueLimit = 0;
+    });
 });
 
 var app = builder.Build();
@@ -54,7 +66,6 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHsts();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
@@ -63,6 +74,7 @@ app.UseRouting();
 app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseRateLimiter();
 
 app.MapControllerRoute(
     name: "default",
@@ -89,8 +101,8 @@ using (var scope = app.Services.CreateScope())
     }
 
     // 2. Find your account and make you an Admin
-    
-    var adminUser = await userManager.FindByEmailAsync("ilianblagovv@gmail.com"); 
+    var adminEmail = app.Configuration["Seeding:AdminEmail"];
+    var adminUser = !string.IsNullOrEmpty(adminEmail) ? await userManager.FindByEmailAsync(adminEmail) : null;
     
     if (adminUser != null && !await userManager.IsInRoleAsync(adminUser, "Admin"))
     {

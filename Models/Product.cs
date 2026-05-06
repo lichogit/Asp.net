@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace SneakerShop.Models
 {
     public class Product
@@ -6,6 +8,9 @@ namespace SneakerShop.Models
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public decimal Price { get; set; }
+        [Required]
+        [Url]
+        [RegularExpression(@"^https://.*", ErrorMessage = "Only HTTPS URLs are allowed.")]
         public string ImageUrl { get; set; } = string.Empty;
     }
 }
