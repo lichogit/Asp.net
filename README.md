@@ -67,4 +67,69 @@ Designed with a "Raw & Bold" philosophy:
 
 ---
 
+## 🚀 Getting Started
+
+Follow these instructions to get the project up and running on your local machine.
+
+### 📋 Prerequisites
+
+Ensure you have the following installed:
+*   **.NET 10 SDK**
+*   **Node.js** (v18+ recommended)
+*   **MS SQL Server** (SQLEXPRESS or LocalDB)
+*   **PostgreSQL** (for the security service)
+
+---
+
+### 🛠️ Installation & Setup
+
+#### 1. Clone the Repository
+```bash
+git clone https://github.com/lichogit/SneakerShop.git
+cd SneakerShop
+```
+
+#### 2. Database Configuration (Main App)
+The main application uses MS SQL Server. By default, it expects a local SQLEXPRESS instance.
+*   Check `appsettings.json` and update the `DefaultConnection` if your server instance differs.
+*   Apply migrations to create the database:
+    ```bash
+    dotnet ef database update
+    ```
+
+#### 3. Security Service Setup
+The security microservice handles specialized audit logging and rate limiting.
+*   Navigate to the server directory:
+    ```bash
+    cd server
+    ```
+*   Install dependencies:
+    ```bash
+    npm install
+    ```
+*   Create a `.env` file in the `server` directory and add your PostgreSQL connection string:
+    ```env
+    PORT=7000
+    DATABASE_URL=postgres://username:password@localhost:5432/sneakershop_security
+    ```
+*   Start the service:
+    ```bash
+    npm start
+    ```
+
+#### 4. Run the Main Application
+Return to the root directory and start the ASP.NET Core application:
+```bash
+cd ..
+dotnet run
+```
+The application will be available at `https://localhost:7163` (or the port specified in `launchSettings.json`).
+
+---
+
+### 🔑 Configuration (Optional)
+*   **Google OAuth**: To enable Google Sign-In, update the `Authentication:Google` section in `appsettings.json` with your `ClientId` and `ClientSecret` from the Google Cloud Console.
+
+---
+
 **Developed by Ilian Blagov**
