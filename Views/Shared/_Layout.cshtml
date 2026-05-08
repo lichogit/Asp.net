@@ -6,6 +6,7 @@
     <title>@ViewData["Title"] - CLOUD STRIDER</title>
     <link rel="icon" type="image/png" href="/favicon.png?v=6" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/tailwind.css" asp-append-version="true" />
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #fafafa; }
         .navbar { background-color: #ffffff; border-bottom: 1px solid #eaeaea; padding: 1.2rem 2rem; }
@@ -17,73 +18,131 @@
         .card:hover { transform: translateY(-5px); }
         .card-img-top { border-radius: 0; height: 250px; object-fit: cover; }
         .footer { background-color: #111; color: #fff; padding: 3rem 0; text-align: center; margin-top: 5rem; }
+
+        /* Neutralize Bootstrap link colors */
+        header a, #react-footer-root a {
+            color: inherit !important;
+            text-decoration: none !important;
+        }
+        #react-footer-root a:hover {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* Company name */
+        header .font-black { color: #111 !important; }
+
+        /* Nav links */
+        header nav a { color: #4b5563 !important; }
+        header nav a:hover { color: #111827 !important; }
+
+        /* Admin Panel link */
+        header nav a.text-red-600 { color: #dc2626 !important; }
+        header nav a.text-red-600:hover { color: #b91c1c !important; }
+
+        /* Search bar */
+        header input[type="search"] {
+            border: 1px solid #d1d5db !important;
+            border-right: 0 !important;
+            border-radius: 0.375rem 0 0 0.375rem !important;
+            background-color: #f9fafb;
+        }
+        header input[type="search"]:focus {
+            border-color: #111827 !important;
+            background-color: #fff;
+        }
+        /* Search button */
+        header form button[type="submit"] {
+            border: 1px solid #d1d5db !important;
+            border-left: 0 !important;
+            border-radius: 0 0.375rem 0.375rem 0 !important;
+            background-color: #fff;
+            color: #374151;
+            transition: all 0.2s ease;
+        }
+        header form button[type="submit"]:hover {
+            background-color: #111 !important;
+            color: #fff !important;
+            border-color: #111 !important;
+        }
+
+        /* Sign In */
+        header a[href*="Login"] { color: #111827 !important; }
+        header a[href*="Login"]:hover { color: #4b5563 !important; }
+
+        /* Sign Up button */
+        header a[href*="Register"] {
+            background-color: #111827 !important;
+            color: #fff !important;
+            border: 1px solid #111827 !important;
+            border-radius: 0.375rem !important;
+            transition: all 0.2s ease;
+        }
+        header a[href*="Register"]:hover {
+            background-color: #000 !important;
+            border-color: #000 !important;
+        }
+
+        /* Logout */
+        header button[type="submit"] { color: #111827 !important; }
+        header button[type="submit"]:hover { color: #4b5563 !important; }
     </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
-   <header class="sticky-top bg-white shadow-sm">
-        <nav class="navbar navbar-expand-lg border-bottom-0"> 
-            <div class="container-fluid">
-                <a class="navbar-brand d-flex align-items-center gap-2 fw-bolder fs-4 letter-spacing-tight" asp-controller="Home" asp-action="Index">
-            <img src="~/images/logo.png?v=2" alt="Cloud Strider Logo" height="70" class="d-inline-block align-text-top">
-            CLOUD STRIDER
-        </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
-        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Shop">Catalog</a></li>
-        <li class="nav-item"><a class="nav-link" asp-controller="Cart" asp-action="Index">Cart</a></li>
-        
-        @if (User.IsInRole("Admin"))
-        {
-            <li class="nav-item">
-                <a class="nav-link text-danger fw-bold text-uppercase" asp-controller="Admin" asp-action="Index">Admin Panel</a>
-            </li>
-        }
-    </ul>
-        
-      
-    
-    <div class="d-flex align-items-center gap-4">
-        
-        <form class="d-flex mb-0" asp-controller="Home" asp-action="Shop" method="get">
-            <input class="form-control rounded-0 me-2" type="search" name="searchString" placeholder="Search sneakers..." value="@ViewData["CurrentFilter"]" style="min-width: 200px;">
-            <button class="btn btn-outline-dark rounded-0 fw-bold text-uppercase" type="submit">Search</button>
-        </form>
+    <header class="sticky top-0 z-50 w-full border-b border-gray-200 bg-white shadow-sm">
+        <div class="container mx-auto px-4">
+            <div class="flex h-16 items-center justify-between">
+                <!-- Logo -->
+                <a class="flex items-center gap-2 no-underline" asp-controller="Home" asp-action="Index">
+                    <img src="~/images/logo.png?v=2" alt="Cloud Strider Logo" class="h-10 w-auto object-contain">
+                    <span class="font-black text-xl tracking-tight text-gray-900 uppercase">Cloud Strider</span>
+                </a>
 
-        <div class="d-flex align-items-center gap-3">
-            @if (User.Identity != null && User.Identity.IsAuthenticated)
-            {
-                <span class="text-muted small fw-bold text-uppercase text-nowrap">Hello, @User.Identity.Name!</span>
-                <form class="form-inline mb-0" asp-controller="Account" asp-action="Logout" method="post">
-                    <button type="submit" class="btn btn-link text-dark text-decoration-none fw-bold text-uppercase p-0 text-nowrap">Logout</button>
-                </form>
-            }
-            else
-            {
-                <a asp-controller="Account" asp-action="Login" class="text-dark text-decoration-none fw-bold text-uppercase small text-nowrap">Sign In</a>
-                <a asp-controller="Account" asp-action="Register" class="btn btn-dark rounded-0 fw-bold text-uppercase px-4 py-2 text-nowrap">Sign Up</a>
-            }
-        </div>
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex items-center gap-6">
+                    <a class="text-sm font-semibold text-gray-600 hover:text-gray-900 uppercase tracking-wide transition-colors no-underline" asp-controller="Home" asp-action="Index">Home</a>
+                    <a class="text-sm font-semibold text-gray-600 hover:text-gray-900 uppercase tracking-wide transition-colors no-underline" asp-controller="Home" asp-action="Shop">Catalog</a>
+                    <a class="text-sm font-semibold text-gray-600 hover:text-gray-900 uppercase tracking-wide transition-colors no-underline" asp-controller="Cart" asp-action="Index">Cart</a>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a class="text-sm font-bold text-red-600 hover:text-red-700 uppercase tracking-wide transition-colors no-underline" asp-controller="Admin" asp-action="Index">Admin Panel</a>
+                    }
+                </nav>
 
-    </div>
-</div>
-                   
+                <!-- Actions -->
+                <div class="hidden md:flex items-center gap-4">
+                    <form class="relative flex items-center m-0" asp-controller="Home" asp-action="Shop" method="get">
+                        <input class="h-9 w-48 rounded-l-md border border-gray-300 bg-gray-50 px-3 py-1 text-sm outline-none focus:border-gray-900 focus:bg-white transition-all" type="search" name="searchString" placeholder="Search sneakers..." value="@ViewData["CurrentFilter"]">
+                        <button class="h-9 rounded-r-md border border-l-0 border-gray-300 bg-white px-4 text-xs font-bold uppercase text-gray-700 hover:bg-gray-50 transition-colors" type="submit">Search</button>
+                    </form>
+
+                    <div class="h-6 w-px bg-gray-200 mx-2"></div>
+
+                    @if (User.Identity != null && User.Identity.IsAuthenticated)
+                    {
+                        <span class="text-xs font-bold text-gray-500 uppercase tracking-wide">Hello, @User.Identity.Name!</span>
+                        <form class="m-0" asp-controller="Account" asp-action="Logout" method="post">
+                            <button type="submit" class="text-sm font-bold text-gray-900 hover:text-gray-600 uppercase transition-colors bg-transparent border-none p-0 cursor-pointer">Logout</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <a asp-controller="Account" asp-action="Login" class="text-sm font-bold text-gray-900 hover:text-gray-600 uppercase transition-colors no-underline">Sign In</a>
+                        <a asp-controller="Account" asp-action="Register" class="rounded-md bg-gray-900 px-4 py-2 text-xs font-bold text-white uppercase tracking-wide hover:bg-gray-800 transition-colors no-underline">Sign Up</a>
+                    }
                 </div>
             </div>
-        </nav>
+        </div>
     </header>
     
    @if (ViewData["FullWidth"] != null)
     {
-        <main role="main" class="flex-grow-1">
+        <main role="main" class="grow">
             @if(TempData["SuccessMessage"] != null) {
                 <div class="container"><div class="alert alert-success rounded-0 border-0 shadow-sm mt-3">@TempData["SuccessMessage"]</div></div>
             }
             @RenderBody()
-            <div class="toast-container position-fixed bottom-0 end-0 p-4" style="z-index: 1050;">
+            <div class="toast-container position-fixed bottom-0 inset-e-0 p-4" style="z-index: 1050;">
                 @if (TempData["ToastMessage"] != null)
                 {
                     <div id="cartToast" class="toast align-items-center text-white bg-dark border-0 shadow" role="alert" aria-live="assertive" aria-atomic="true">
@@ -103,13 +162,13 @@
     }
     else
     {
-        <div class="container mt-5 flex-grow-1">
+        <div class="container mt-5 grow">
             <main role="main" class="pb-3">
                 @if(TempData["SuccessMessage"] != null) {
                     <div class="alert alert-success rounded-0 border-0 shadow-sm">@TempData["SuccessMessage"]</div>
                 }
                 @RenderBody()
-                <div class="toast-container position-fixed bottom-0 end-0 p-4" style="z-index: 1050;">
+                <div class="toast-container position-fixed bottom-0 inset-e-0 p-4" style="z-index: 1050;">
                     @if (TempData["ToastMessage"] != null)
                     {
                         <div id="cartToast" class="toast align-items-center text-white bg-dark border-0 shadow" role="alert" aria-live="assertive" aria-atomic="true">
@@ -129,12 +188,9 @@
         </div>
     }
 
-    <footer class="footer">
-        <div class="container">
-            &copy; 2026 - CLOUD STRIDER - Crafted with ASP.NET Core
-        </div>
-    </footer>
+    <div id="react-footer-root"></div>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/components.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
     
     <script>
