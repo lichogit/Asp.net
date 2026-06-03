@@ -22,11 +22,4 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="SneakerShop\**" />
-    <Content Remove="SneakerShop\**" />
-    <EmbeddedResource Remove="SneakerShop\**" />
-    <None Remove="SneakerShop\**" />
-  </ItemGroup>
-
 </Project>
